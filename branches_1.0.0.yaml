@@ -47,9 +47,10 @@ x-ibm-configuration:
       - gatewayscript:
           title: gatewayscript
           version: 1.0.0
-          source: >-
+          source: >+
             // var apim = require ('./apim.custom.js'); --> only required if a
             var different than apim is used
+
 
             apim.output('application/json');
 
@@ -92,6 +93,7 @@ x-ibm-configuration:
             apim.setvariable('message.headers.mobile',metadataObj.mobileNo);
 
             apim.setvariable('message.headers.account',metadataObj.SelectedAccount);
+
       - invoke:
           target-url: 'https://apim-services.mybluemix.net/banka/v1/branches'
           secure-gateway: false
@@ -113,11 +115,11 @@ x-ibm-configuration:
               schema:
                 $ref: '#/definitions/branch'
               variable: branches-res
-            oauthMetadataMobileNo:
+            oauthMetadataMobile:
               schema:
                 type: string
               variable: message.headers.mobile
-            oauthMetadataSelectedAccount:
+            oauthMetadataAccount:
               schema:
                 type: string
               variable: message.headers.account
@@ -127,14 +129,6 @@ x-ibm-configuration:
                 $ref: '#/definitions/branchWithOauthMetadata'
               variable: message.body
           actions:
-            - set: response.mobileNo
-              from: oauthMetadataMobileNo
-            - set: response.selectedAccount
-              from: oauthMetadataSelectedAccount
-            - set: response.branch.address
-              from: branches-res.address
-            - set: response.branch
-              from: branches-res
             - set: response.branch.address.zip_code
               from: branches-res.address.zip_code
             - set: response.branch.address.street1
@@ -145,10 +139,18 @@ x-ibm-configuration:
               from: branches-res.address.city
             - set: response.branch.address.state
               from: branches-res.address.state
+            - set: response.branch.address
+              from: branches-res.address
+            - set: response.branch
+              from: branches-res
             - set: response.branch.type
               from: branches-res.type
             - set: response.branch.id
               from: branches-res.id
+            - set: response.mobileNo
+              from: oauthMetadataMobile
+            - set: response.selectedAccount
+              from: oauthMetadataAccount
           version: 1.0.0
   gateway: datapower-gateway
 paths:

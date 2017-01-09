@@ -1,5 +1,5 @@
 ### Security services implementation from repo below:
-https://github.com/gxvigo/apic-security-services
+https://github.com/gxvigo/wp-apic-api-calls-with-oauth
 
 ## Portal on Bluemix
 -  app: Fintech OAuth
@@ -8,10 +8,10 @@ https://github.com/gxvigo/apic-security-services
 
 
 ## Portal on my Mac
--  app: Fintech
-  -  clientID: ab9b3671-bfb0-4d08-b954-f00693a69c75
-  -  secret: xX0aI6nQ4qN8cE2jD8wF3vC0xN5mL4oI3bO2pE2yE2tN4eC7eR
-  - OAuth redirect URL: http://192.168.225.1:3080/clientOAuthRedirectionURL
+-  app: wp-Fintech
+  -  clientID: e220c8a4-0eba-4a8f-9657-50b982f5f47a
+  -  secret: fD0sI1sW3mM4nO8gN6dN3cO5eF2lD5tB1yT1jB8oJ1mU1wK1uV
+  -  OAuth redirect URL: http://192.168.225.1:3080/clientOAuthRedirectionURL
 
 
 Authenticatin URL: http://apic-security-services.au-syd.mybluemix.net/authenticate
@@ -26,7 +26,7 @@ https://api.au.apiconnect.ibmcloud.com/giovanninzibmcom-dev/sb/oauth-end/oauth2/
 ## API OAuth requesting access token - on my Mac (API Branches confidential-accessCode)
 
   - initial request:
-    https://api.think.ibm/sales/sb/oauth-end/oauth2/authorize?response_type=code&redirect_uri=http://192.168.225.1:3080/clientOAuthRedirectionURL&scope=view_branches&client_id=ab9b3671-bfb0-4d08-b954-f00693a69c75
+    https://api.think.ibm/sales/sb/oauth-end/oauth2/authorize?response_type=code&redirect_uri=http://192.168.225.1:3080/clientOAuthRedirectionURL&scope=view_branches&client_id=e220c8a4-0eba-4a8f-9657-50b982f5f47a
 
   - follow the flow in the browser (authentication login, authorization)
   
