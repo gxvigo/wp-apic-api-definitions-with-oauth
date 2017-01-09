@@ -1,0 +1,108 @@
+{
+	"variables": [],
+	"info": {
+		"name": "APIC OAuth tutorial",
+		"_postman_id": "6d44c43f-fc5f-2b73-c60a-0a862f929d55",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Node authentication service on Bluemix (Authentication URL)",
+			"request": {
+				"url": "http://apic-security-services.au-syd.mybluemix.net/authenticate",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Node authentication service on my Mac (Authentication URL)",
+			"request": {
+				"url": "http://localhost:3080/authenticate",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Z2lvdmFubmk6cGFzc3dvcmQ=",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "/Users/giovanni/opt/workspaces/NodeSamples/webServer"
+			},
+			"response": []
+		},
+		{
+			"name": "Token request",
+			"request": {
+				"url": "https://api.think.ibm/sales/sb/oauth-end/oauth2/token",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWI5YjM2NzEtYmZiMC00ZDA4LWI5NTQtZjAwNjkzYTY5Yzc1OnhYMGFJNm5RNHFOOGNFMmpEOHdGM3ZDMHhONW1MNG9JM2JPMnBFMnlFMnRONGVDN2VS",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "grant_type=authorization_code&redirect_uri=http://192.168.225.1:3080/clientOAuthRedirectionURL&code=AAJ6mlifRzt0wrY94VL44JoS-q2eHfxhHBjBirKoGem1Gr67jENh5qS8HGfSugbyDb3uyQFH0pYPTM6RjIKC6PgD-n5SMqVQBtFbRmpQWfDaEA"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "APIC resourse call - Branches confidential-accessCode",
+			"request": {
+				"url": "https://api.think.ibm/sales/sb/branches-cac/details",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer AAEkZTIyMGM4YTQtMGViYS00YThmLTk2NTctNTBiOTgyZjVmNDdhDdP2Lz2Lyfyt2YEkjU9Ac03Ufv5wghegxYC0wKbTLQEs8TGSFHID1t5WKh2jL-W_m33QK1NYt1X3yJf8rLCYuq7maEHZ_aY6swrvEc76mqEX08arebjo0NRsJkiX_dUEDV9O_gRtioz6_VaLWAipOU0PGHDhv07bf8ZdVIxe7gU",
+						"description": ""
+					},
+					{
+						"key": "X-IBM-Client-Id",
+						"value": "e220c8a4-0eba-4a8f-9657-50b982f5f47a",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "This is last step in the API flow with OAuth.\n\nFirst make the call to oauth2/autorize, with all process, then copy the Bearer token into the Authorization header"
+			},
+			"response": []
+		},
+		{
+			"name": "APIC resourse call - Branches confidential-no oauth",
+			"request": {
+				"url": "https://api.think.ibm/sales/sb/branches-no/details",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer AAEkZTIyMGM4YTQtMGViYS00YThmLTk2NTctNTBiOTgyZjVmNDdhSlSGsLSf5wXrpUj0xESMCH-lR31-t43gx9OOhRG6wO3A9FN7D2Nk4rwH3Kw7OUt9qExjnOlgU9YEn_V8lv6c7CJUFO7pK0xYxjTqpb0BoGDgyR1HqzxYXTGQ2llHSVp-m8mLdnfIgIcBnNUpxXwalgqN3OksdmV97ue5Jtp7q0g",
+						"description": ""
+					},
+					{
+						"key": "X-IBM-Client-Id",
+						"value": "e220c8a4-0eba-4a8f-9657-50b982f5f47a",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

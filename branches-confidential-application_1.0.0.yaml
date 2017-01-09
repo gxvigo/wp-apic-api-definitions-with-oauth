@@ -1,0 +1,95 @@
+swagger: '2.0'
+info:
+  x-ibm-name: branches-confidential-application
+  title: Branches confidential-application
+  version: 1.0.0
+schemes:
+  - https
+host: $(catalog.host)
+basePath: /branches-ca
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  OAuth definition:
+    type: oauth2
+    description: OAuth confidential application flow
+    flow: application
+    scopes:
+      view_branches_confApp: Allows access to branch details. Confidential application flow
+    tokenUrl: 'https://api.think.ibm/sales/sb/oauth-end/oauth2/token'
+  AuthenticationURL:
+    type: basic
+    description: ''
+    x-ibm-authentication-url:
+      url: 'http://apic-security-services.au-syd.mybluemix.net/authenticate'
+  Client Secret:
+    type: apiKey
+    description: ''
+    in: header
+    name: X-IBM-Client-Secret
+  clientIdHeader:
+    type: apiKey
+    in: header
+    name: X-IBM-Client-Id
+security:
+  - OAuth definition:
+      - view_branches_confApp
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          target-url: 'https://apim-services.mybluemix.net/banka/v1/branches'
+          secure-gateway: false
+          title: Branches Invoke
+          description: >-
+            Invoke an API to retrieve the status of all branches in the BankA
+            system
+paths:
+  /details:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/branch'
+      summary: Branch details
+      description: Retrieve details of the current branches of BankA
+definitions:
+  branch:
+    properties:
+      address:
+        $ref: '#/definitions/address'
+      type:
+        type: string
+        example: atm
+      id:
+        type: string
+        example: 9d72ece0-7e7b-11e5-9038-55f9f9c08c06
+    additionalProperties: false
+    description: The format of the branch field.
+  address:
+    properties:
+      zip_code:
+        type: string
+        example: '92122'
+      street1:
+        type: string
+        example: 4660 La Jolla Village Drive
+      street2:
+        type: string
+        example: Suite 200
+      city:
+        type: string
+        example: San Diego
+      state:
+        type: string
+        example: CA
+    additionalProperties: false
+    description: The format of the address object.
+tags: []

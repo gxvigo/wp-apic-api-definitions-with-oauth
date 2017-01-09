@@ -1,0 +1,41 @@
+product: 1.0.0
+info:
+  name: wp-banking-services
+  title: wp Banking Services
+  version: 1.0.0
+visibility:
+  view:
+    type: public
+  subscribe:
+    type: authenticated
+plans:
+  Basic:
+    title: Basic
+    description: Default Plan
+    approval: false
+    rate-limit:
+      value: 10/1minute
+      hard-limit: true
+    apis:
+      branches:
+        operations:
+          - operation: get
+            path: /details
+            rate-limits:
+              rate-limit-1:
+                value: 10/1minute
+      oauth-endpoint-api: {}
+      branches-confidential-application: {}
+      wp-stockquoteservice: {}
+      branches-no-oauth: {}
+apis:
+  branches:
+    $ref: branches_1.0.0.yaml
+  oauth-endpoint-api:
+    $ref: oauth-endpoint-api_1.0.0.yaml
+  branches-confidential-application:
+    $ref: branches-confidential-application_1.0.0.yaml
+  wp-stockquoteservice:
+    $ref: stockquoteservice_1.0.0.yaml
+  branches-no-oauth:
+    $ref: branches-no-oauth_1.0.0.yaml

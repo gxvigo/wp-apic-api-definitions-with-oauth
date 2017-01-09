@@ -1,0 +1,209 @@
+swagger: '2.0'
+info:
+  x-ibm-name: branches-confidential-accesscode
+  title: Branches confidential-accessCode
+  version: 1.0.0
+schemes:
+  - https
+host: $(catalog.host)
+basePath: /branches-cac
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  OAuth definition:
+    type: oauth2
+    description: ''
+    flow: accessCode
+    scopes:
+      view_branches: view_branches
+    authorizationUrl: 'https://api.think.ibm/sales/sb/oauth-end/oauth2/authorize'
+    tokenUrl: 'https://api.think.ibm/sales/sb/oauth-end/oauth2/token'
+  AuthenticationURL:
+    type: basic
+    description: ''
+    x-ibm-authentication-url:
+      url: 'http://apic-security-services.au-syd.mybluemix.net/authenticate'
+  Client Secret:
+    type: apiKey
+    description: ''
+    in: header
+    name: X-IBM-Client-Secret
+  clientIdHeader:
+    type: apiKey
+    in: header
+    name: X-IBM-Client-Id
+security:
+  - OAuth definition:
+      - view_branches
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - gatewayscript:
+          title: gatewayscript
+          version: 1.0.0
+          source: >-
+            // var apim = require ('./apim.custom.js'); --> only required if a
+            var different than apim is used
+
+            apim.output('application/json');
+
+            console.warn('### In Branches gatewayscript');
+
+            console.warn('### In Branches gatewayscript, OAuth Metadata Token
+            >>' + apim.getvariable('oauth.miscinfo'));
+
+
+            var body={'account':apim.getvariable('request.parameters.account'),
+            'owner':apim.getvariable('oauth.resource-owner'),
+            'scope':apim.getvariable('oauth.scope'),
+            'miscinfo':apim.getvariable('oauth.miscinfo'),
+            'notbefore':apim.getvariable('oauth.not-before'),
+            'notafter':apim.getvariable('oauth.not-after')};
+
+            //body.type = 'checking';
+
+            // body.balance = 0.88;
+
+            session.output.write(body); 
+
+
+            apim.setvariable('message.headers.metadataInfo',apim.getvariable('oauth.miscinfo'));
+
+
+            var metadataSubstring =
+            apim.getvariable('oauth.miscinfo').substring(apim.getvariable('oauth.miscinfo').lastIndexOf('a:')
+            + 2); 
+
+            var metadataFinalString = metadataSubstring+'}';  // to fix an issue
+            with missing } in the original string
+
+            var metadataObj = JSON.parse(metadataFinalString);
+
+            console.warn('### In Branches gatewayscript, oauth metadata mobileNo
+            ' + metadataObj.mobileNo);
+
+
+            apim.setvariable('message.headers.mobile',metadataObj.mobileNo);
+
+            apim.setvariable('message.headers.account',metadataObj.SelectedAccount);
+      - invoke:
+          target-url: 'https://apim-services.mybluemix.net/banka/v1/branches'
+          secure-gateway: false
+          title: Branches Invoke
+          description: >-
+            Invoke an API to retrieve the status of all branches in the BankA
+            system
+          output: branches-res
+      - gatewayscript:
+          title: gatewayscript
+          version: 1.0.0
+          source: >-
+            console.warn('### In Branches gatewayscript, branches-res: ' +
+            JSON.stringify());
+      - map:
+          title: map
+          inputs:
+            branches-res:
+              schema:
+                $ref: '#/definitions/branch'
+              variable: branches-res
+            oauthMetadataMobileNo:
+              schema:
+                type: string
+              variable: message.headers.mobile
+            oauthMetadataSelectedAccount:
+              schema:
+                type: string
+              variable: message.headers.account
+          outputs:
+            response:
+              schema:
+                $ref: '#/definitions/branchWithOauthMetadata'
+              variable: message.body
+          actions:
+            - set: response.mobileNo
+              from: oauthMetadataMobileNo
+            - set: response.selectedAccount
+              from: oauthMetadataSelectedAccount
+            - set: response.branch.address
+              from: branches-res.address
+            - set: response.branch
+              from: branches-res
+            - set: response.branch.address.zip_code
+              from: branches-res.address.zip_code
+            - set: response.branch.address.street1
+              from: branches-res.address.street1
+            - set: response.branch.address.street2
+              from: branches-res.address.street2
+            - set: response.branch.address.city
+              from: branches-res.address.city
+            - set: response.branch.address.state
+              from: branches-res.address.state
+            - set: response.branch.type
+              from: branches-res.type
+            - set: response.branch.id
+              from: branches-res.id
+          version: 1.0.0
+  gateway: datapower-gateway
+paths:
+  /details:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/branchWithOauthMetadata'
+      summary: Branch details
+      description: Retrieve details of the current branches of BankA
+definitions:
+  branch:
+    properties:
+      address:
+        $ref: '#/definitions/address'
+      type:
+        type: string
+        example: atm
+      id:
+        type: string
+        example: 9d72ece0-7e7b-11e5-9038-55f9f9c08c06
+    additionalProperties: false
+    description: The format of the branch field.
+  branchWithOauthMetadata:
+    properties:
+      mobileNo:
+        type: string
+        description: OAuth metadata
+      selectedAccount:
+        type: string
+        description: OAuth metadata
+      branch:
+        example: ''
+        $ref: '#/definitions/branch'
+    additionalProperties: false
+    description: The format of the branch field plus OAuth metadata
+  address:
+    properties:
+      zip_code:
+        type: string
+        example: '92122'
+      street1:
+        type: string
+        example: 4660 La Jolla Village Drive
+      street2:
+        type: string
+        example: Suite 200
+      city:
+        type: string
+        example: San Diego
+      state:
+        type: string
+        example: CA
+    additionalProperties: false
+    description: The format of the address object.
+tags: []

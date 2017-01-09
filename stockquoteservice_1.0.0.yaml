@@ -1,0 +1,482 @@
+swagger: '2.0'
+info:
+  title: wp-StockQuoteService
+  description: ''
+  x-ibm-name: wp-stockquoteservice
+  version: 1.0.0
+schemes:
+  - https
+basePath: /StockQuoteService
+produces:
+  - application/xml
+consumes:
+  - text/xml
+securityDefinitions:
+  clientID:
+    type: apiKey
+    name: X-IBM-Client-Id
+    in: header
+    description: ''
+security:
+  - clientID: []
+x-ibm-configuration:
+  type: wsdl
+  wsdl-definition:
+    wsdl: SQS.zip
+    service: StockQuoteService
+    port: BasicHttpBinding_IStockQuoteService
+    soap-version: '1.1'
+  assembly:
+    execute:
+      - proxy:
+          title: proxy
+          target-url: 'http://www.restfulwebservices.net/wcf/StockQuoteService.svc'
+          secure-gateway: false
+  gateway: datapower-gateway
+  enforced: true
+  testable: true
+  phase: realized
+  cors:
+    enabled: true
+paths:
+  /GetStockQuote:
+    post:
+      summary: Operation GetStockQuote
+      description: ''
+      operationId: GetStockQuote
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/GetStockQuoteInput'
+      responses:
+        '500':
+          description: ''
+          schema:
+            $ref: '#/definitions/GetStockQuoteFault'
+        default:
+          description: ''
+          schema:
+            $ref: '#/definitions/GetStockQuoteOutput'
+      x-ibm-soap:
+        soap-action: GetStockQuote
+        soap-operation: >-
+          {http://www.restfulwebservices.net/ServiceContracts/2008/01}GetStockQuote
+  /GetWorldMajorIndices:
+    post:
+      summary: Operation GetWorldMajorIndices
+      description: ''
+      operationId: GetWorldMajorIndices
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/GetWorldMajorIndicesInput'
+      responses:
+        '500':
+          description: ''
+          schema:
+            $ref: '#/definitions/GetWorldMajorIndicesFault'
+        default:
+          description: ''
+          schema:
+            $ref: '#/definitions/GetWorldMajorIndicesOutput'
+      x-ibm-soap:
+        soap-action: GetWorldMajorIndices
+        soap-operation: >-
+          {http://www.restfulwebservices.net/ServiceContracts/2008/01}GetWorldMajorIndices
+definitions:
+  Security:
+    xml:
+      namespace: >-
+        http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd
+      prefix: wsse
+    type: object
+    properties:
+      UsernameToken:
+        type: object
+        properties:
+          Username:
+            type: string
+          Password:
+            type: string
+  GetStockQuoteInput:
+    type: object
+    properties:
+      Envelope:
+        xml:
+          prefix: soap-env
+          namespace: 'http://schemas.xmlsoap.org/soap/envelope/'
+        type: object
+        properties:
+          Header:
+            $ref: '#/definitions/GetStockQuoteHeader'
+          Body:
+            type: object
+            properties:
+              GetStockQuote:
+                $ref: '#/definitions/GetStockQuote'
+    example: >-
+
+      <soap-env:Envelope
+      xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+       <soap-env:Header>
+        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+         <UsernameToken>
+          <Username>string</Username>
+          <Password>string</Password>
+         </UsernameToken>
+        </wsse:Security>
+       </soap-env:Header>
+       <soap-env:Body>
+        <tns:GetStockQuote xmlns:tns="http://www.restfulwebservices.net/ServiceContracts/2008/01">
+         <tns:request>string</tns:request>
+        </tns:GetStockQuote>
+       </soap-env:Body>
+      </soap-env:Envelope>
+  GetStockQuoteOutput:
+    type: object
+    properties:
+      Envelope:
+        xml:
+          prefix: soap-env
+          namespace: 'http://schemas.xmlsoap.org/soap/envelope/'
+        type: object
+        properties:
+          Body:
+            type: object
+            properties:
+              GetStockQuoteResponse:
+                $ref: '#/definitions/GetStockQuoteResponse'
+    example: >-
+
+      <soap-env:Envelope
+      xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+       <soap-env:Body>
+        <tns:GetStockQuoteResponse xmlns:tns="http://www.restfulwebservices.net/ServiceContracts/2008/01" xmlns:ns1="http://www.restfulwebservices.net/DataContracts/2008/01">
+         <tns:GetStockQuoteResult>
+          <ns1:Symbol>string</ns1:Symbol>
+          <ns1:Last>string</ns1:Last>
+          <ns1:Date>string</ns1:Date>
+          <ns1:Time>string</ns1:Time>
+          <ns1:Change>string</ns1:Change>
+          <ns1:Open>string</ns1:Open>
+          <ns1:High>string</ns1:High>
+          <ns1:Low>string</ns1:Low>
+          <ns1:Volume>string</ns1:Volume>
+          <ns1:MktCap>string</ns1:MktCap>
+          <ns1:PreviousClose>string</ns1:PreviousClose>
+          <ns1:PercentageChange>string</ns1:PercentageChange>
+          <ns1:AnnRange>string</ns1:AnnRange>
+          <ns1:Earns>string</ns1:Earns>
+          <ns1:PE>string</ns1:PE>
+          <ns1:Name>string</ns1:Name>
+         </tns:GetStockQuoteResult>
+        </tns:GetStockQuoteResponse>
+       </soap-env:Body>
+      </soap-env:Envelope>
+  GetStockQuoteHeader:
+    type: object
+    properties:
+      Security:
+        $ref: '#/definitions/Security'
+  GetStockQuoteFault:
+    type: object
+    properties:
+      Envelope:
+        xml:
+          prefix: soap-env
+          namespace: 'http://schemas.xmlsoap.org/soap/envelope/'
+        type: object
+        properties:
+          Fault:
+            type: object
+            properties:
+              DefaultFaultContractFault:
+                $ref: >-
+                  #/definitions/IStockQuoteService_GetStockQuote_DefaultFaultContractFault_FaultMessage
+  GetWorldMajorIndicesInput:
+    type: object
+    properties:
+      Envelope:
+        xml:
+          prefix: soap-env
+          namespace: 'http://schemas.xmlsoap.org/soap/envelope/'
+        type: object
+        properties:
+          Header:
+            $ref: '#/definitions/GetWorldMajorIndicesHeader'
+          Body:
+            type: object
+            properties:
+              GetWorldMajorIndices:
+                $ref: '#/definitions/GetWorldMajorIndices'
+    example: >-
+
+      <soap-env:Envelope
+      xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+       <soap-env:Header>
+        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+         <UsernameToken>
+          <Username>string</Username>
+          <Password>string</Password>
+         </UsernameToken>
+        </wsse:Security>
+       </soap-env:Header>
+       <soap-env:Body>
+        <tns:GetWorldMajorIndices xmlns:tns="http://www.restfulwebservices.net/ServiceContracts/2008/01"></tns:GetWorldMajorIndices>
+       </soap-env:Body>
+      </soap-env:Envelope>
+  GetWorldMajorIndicesOutput:
+    type: object
+    properties:
+      Envelope:
+        xml:
+          prefix: soap-env
+          namespace: 'http://schemas.xmlsoap.org/soap/envelope/'
+        type: object
+        properties:
+          Body:
+            type: object
+            properties:
+              GetWorldMajorIndicesResponse:
+                $ref: '#/definitions/GetWorldMajorIndicesResponse'
+    example: >-
+
+      <soap-env:Envelope
+      xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">
+       <soap-env:Body>
+        <tns:GetWorldMajorIndicesResponse xmlns:tns="http://www.restfulwebservices.net/ServiceContracts/2008/01" xmlns:ns1="http://www.restfulwebservices.net/DataContracts/2008/01">
+         <tns:GetWorldMajorIndicesResult>
+          <ns1:StockQuote><!-- between zero and unlimited repetitions of this element -->
+           <ns1:Symbol>string</ns1:Symbol>
+           <ns1:Last>string</ns1:Last>
+           <ns1:Date>string</ns1:Date>
+           <ns1:Time>string</ns1:Time>
+           <ns1:Change>string</ns1:Change>
+           <ns1:Open>string</ns1:Open>
+           <ns1:High>string</ns1:High>
+           <ns1:Low>string</ns1:Low>
+           <ns1:Volume>string</ns1:Volume>
+           <ns1:MktCap>string</ns1:MktCap>
+           <ns1:PreviousClose>string</ns1:PreviousClose>
+           <ns1:PercentageChange>string</ns1:PercentageChange>
+           <ns1:AnnRange>string</ns1:AnnRange>
+           <ns1:Earns>string</ns1:Earns>
+           <ns1:PE>string</ns1:PE>
+           <ns1:Name>string</ns1:Name>
+          </ns1:StockQuote>
+         </tns:GetWorldMajorIndicesResult>
+        </tns:GetWorldMajorIndicesResponse>
+       </soap-env:Body>
+      </soap-env:Envelope>
+  GetWorldMajorIndicesHeader:
+    type: object
+    properties:
+      Security:
+        $ref: '#/definitions/Security'
+  GetWorldMajorIndicesFault:
+    type: object
+    properties:
+      Envelope:
+        xml:
+          prefix: soap-env
+          namespace: 'http://schemas.xmlsoap.org/soap/envelope/'
+        type: object
+        properties:
+          Fault:
+            type: object
+            properties:
+              DefaultFaultContractFault:
+                $ref: >-
+                  #/definitions/IStockQuoteService_GetWorldMajorIndices_DefaultFaultContractFault_FaultMessage
+  GetStockQuote:
+    xml:
+      namespace: 'http://www.restfulwebservices.net/ServiceContracts/2008/01'
+      prefix: tns
+    type: object
+    properties:
+      request:
+        type: string
+    example: >-
+
+      <tns:GetStockQuote
+      xmlns:tns="http://www.restfulwebservices.net/ServiceContracts/2008/01">
+       <tns:request>string</tns:request>
+      </tns:GetStockQuote>
+  GetStockQuoteResponse:
+    xml:
+      namespace: 'http://www.restfulwebservices.net/ServiceContracts/2008/01'
+      prefix: tns
+    type: object
+    properties:
+      GetStockQuoteResult:
+        $ref: '#/definitions/StockQuote'
+    example: >-
+
+      <tns:GetStockQuoteResponse
+      xmlns:tns="http://www.restfulwebservices.net/ServiceContracts/2008/01"
+      xmlns:ns1="http://www.restfulwebservices.net/DataContracts/2008/01">
+       <tns:GetStockQuoteResult>
+        <ns1:Symbol>string</ns1:Symbol>
+        <ns1:Last>string</ns1:Last>
+        <ns1:Date>string</ns1:Date>
+        <ns1:Time>string</ns1:Time>
+        <ns1:Change>string</ns1:Change>
+        <ns1:Open>string</ns1:Open>
+        <ns1:High>string</ns1:High>
+        <ns1:Low>string</ns1:Low>
+        <ns1:Volume>string</ns1:Volume>
+        <ns1:MktCap>string</ns1:MktCap>
+        <ns1:PreviousClose>string</ns1:PreviousClose>
+        <ns1:PercentageChange>string</ns1:PercentageChange>
+        <ns1:AnnRange>string</ns1:AnnRange>
+        <ns1:Earns>string</ns1:Earns>
+        <ns1:PE>string</ns1:PE>
+        <ns1:Name>string</ns1:Name>
+       </tns:GetStockQuoteResult>
+      </tns:GetStockQuoteResponse>
+  IStockQuoteService_GetStockQuote_DefaultFaultContractFault_FaultMessage:
+    xml:
+      namespace: 'http://GOTLServices.FaultContracts/2008/01'
+      prefix: q1
+    type: object
+    properties:
+      ErrorId:
+        type: integer
+        format: int32
+      ErrorMessage:
+        type: string
+      CorrelationId:
+        $ref: '#/definitions/guid'
+    example: >-
+
+      <q1:IStockQuoteService_GetStockQuote_DefaultFaultContractFault_FaultMessage
+      xmlns:q1="http://GOTLServices.FaultContracts/2008/01">
+       <ErrorId>3</ErrorId>
+       <ErrorMessage>string</ErrorMessage>
+       <CorrelationId>string</CorrelationId>
+      </q1:IStockQuoteService_GetStockQuote_DefaultFaultContractFault_FaultMessage>
+  GetWorldMajorIndices:
+    xml:
+      namespace: 'http://www.restfulwebservices.net/ServiceContracts/2008/01'
+      prefix: tns
+    type: object
+    properties: {}
+    example: >-
+
+      <tns:GetWorldMajorIndices
+      xmlns:tns="http://www.restfulwebservices.net/ServiceContracts/2008/01">
+
+      </tns:GetWorldMajorIndices>
+  GetWorldMajorIndicesResponse:
+    xml:
+      namespace: 'http://www.restfulwebservices.net/ServiceContracts/2008/01'
+      prefix: tns
+    type: object
+    properties:
+      GetWorldMajorIndicesResult:
+        $ref: '#/definitions/ArrayOfStockQuote'
+    example: >-
+
+      <tns:GetWorldMajorIndicesResponse
+      xmlns:tns="http://www.restfulwebservices.net/ServiceContracts/2008/01"
+      xmlns:ns1="http://www.restfulwebservices.net/DataContracts/2008/01">
+       <tns:GetWorldMajorIndicesResult>
+        <ns1:StockQuote><!-- between zero and unlimited repetitions of this element -->
+         <ns1:Symbol>string</ns1:Symbol>
+         <ns1:Last>string</ns1:Last>
+         <ns1:Date>string</ns1:Date>
+         <ns1:Time>string</ns1:Time>
+         <ns1:Change>string</ns1:Change>
+         <ns1:Open>string</ns1:Open>
+         <ns1:High>string</ns1:High>
+         <ns1:Low>string</ns1:Low>
+         <ns1:Volume>string</ns1:Volume>
+         <ns1:MktCap>string</ns1:MktCap>
+         <ns1:PreviousClose>string</ns1:PreviousClose>
+         <ns1:PercentageChange>string</ns1:PercentageChange>
+         <ns1:AnnRange>string</ns1:AnnRange>
+         <ns1:Earns>string</ns1:Earns>
+         <ns1:PE>string</ns1:PE>
+         <ns1:Name>string</ns1:Name>
+        </ns1:StockQuote>
+       </tns:GetWorldMajorIndicesResult>
+      </tns:GetWorldMajorIndicesResponse>
+  IStockQuoteService_GetWorldMajorIndices_DefaultFaultContractFault_FaultMessage:
+    xml:
+      namespace: 'http://GOTLServices.FaultContracts/2008/01'
+      prefix: q1
+    type: object
+    properties:
+      ErrorId:
+        type: integer
+        format: int32
+      ErrorMessage:
+        type: string
+      CorrelationId:
+        $ref: '#/definitions/guid'
+    example: >-
+
+      <q1:IStockQuoteService_GetWorldMajorIndices_DefaultFaultContractFault_FaultMessage
+      xmlns:q1="http://GOTLServices.FaultContracts/2008/01">
+       <ErrorId>3</ErrorId>
+       <ErrorMessage>string</ErrorMessage>
+       <CorrelationId>string</CorrelationId>
+      </q1:IStockQuoteService_GetWorldMajorIndices_DefaultFaultContractFault_FaultMessage>
+  StockQuote:
+    xml:
+      namespace: 'http://www.restfulwebservices.net/DataContracts/2008/01'
+      prefix: ns1
+    type: object
+    properties:
+      Symbol:
+        type: string
+      Last:
+        type: string
+      Date:
+        type: string
+      Time:
+        type: string
+      Change:
+        type: string
+      Open:
+        type: string
+      High:
+        type: string
+      Low:
+        type: string
+      Volume:
+        type: string
+      MktCap:
+        type: string
+      PreviousClose:
+        type: string
+      PercentageChange:
+        type: string
+      AnnRange:
+        type: string
+      Earns:
+        type: string
+      PE:
+        type: string
+      Name:
+        type: string
+  guid:
+    xml:
+      namespace: 'http://schemas.microsoft.com/2003/10/Serialization/'
+      prefix: ns2
+    type: string
+    pattern: '[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}'
+  ArrayOfStockQuote:
+    xml:
+      namespace: 'http://www.restfulwebservices.net/DataContracts/2008/01'
+      prefix: ns1
+    type: object
+    properties:
+      StockQuote:
+        type: array
+        items:
+          $ref: '#/definitions/StockQuote'

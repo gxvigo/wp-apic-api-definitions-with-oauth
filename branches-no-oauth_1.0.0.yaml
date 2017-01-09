@@ -1,0 +1,113 @@
+swagger: '2.0'
+info:
+  x-ibm-name: branches-no-oauth
+  title: Branches no OAuth
+  version: 1.0.0
+schemes:
+  - https
+host: $(catalog.host)
+basePath: /branches-no
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  api-key:
+    type: apiKey
+    description: ''
+    in: header
+    name: X-IBM-Client-Id
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+      - invoke:
+          target-url: 'https://apim-services.mybluemix.net/banka/v1/branches'
+          secure-gateway: false
+          title: Branches Invoke
+          description: >-
+            Invoke an API to retrieve the status of all branches in the BankA
+            system
+          output: branches-res
+      - map:
+          title: map
+          inputs:
+            branches-res:
+              schema:
+                $ref: '#/definitions/branch'
+              variable: branches-res
+          outputs:
+            response:
+              schema:
+                $ref: '#/definitions/branch'
+              variable: message.body
+              content: application/json
+          actions:
+            - set: response
+              from: branches-res
+            - set: response.address
+              from: branches-res.address
+            - set: response.address.zip_code
+              from: branches-res.address.zip_code
+            - set: response.address.street1
+              from: branches-res.address.street1
+            - set: response.address.street2
+              from: branches-res.address.street2
+            - set: response.address.city
+              from: branches-res.address.city
+            - set: response.address.state
+              from: branches-res.address.state
+            - set: response.type
+              from: branches-res.type
+            - set: response.id
+              from: branches-res.id
+          version: 1.0.0
+  gateway: datapower-gateway
+paths:
+  /details:
+    get:
+      responses:
+        '200':
+          description: 200 OK
+          schema:
+            $ref: '#/definitions/branch'
+      summary: Branch details
+      description: Retrieve details of the current branches of BankA
+definitions:
+  branch:
+    properties:
+      address:
+        $ref: '#/definitions/address'
+      type:
+        type: string
+        example: atm
+      id:
+        type: string
+        example: 9d72ece0-7e7b-11e5-9038-55f9f9c08c06
+    additionalProperties: false
+    description: The format of the branch field.
+  address:
+    properties:
+      zip_code:
+        type: string
+        example: '92122'
+      street1:
+        type: string
+        example: 4660 La Jolla Village Drive
+      street2:
+        type: string
+        example: Suite 200
+      city:
+        type: string
+        example: San Diego
+      state:
+        type: string
+        example: CA
+    additionalProperties: false
+    description: The format of the address object.
+tags: []
+security:
+  - api-key: []
